@@ -6,7 +6,7 @@ import { RouterLink, RouterView } from 'vue-router';
   <ul id="nav">
     <li><RouterLink to="/">Home</RouterLink></li>
     <li><RouterLink to="/page1">Page1</RouterLink></li>
-    <li><RouterLink to="/page2">Page2</RouterLink></li>
+    <!-- <li><RouterLink to="/page2">Page2</RouterLink></li> -->
     <li><RouterLink to="/page3">Page3</RouterLink></li>
     <li><RouterLink to="/page4">Page4</RouterLink></li>
   </ul>

@@ -43,16 +43,17 @@ onMounted(getData)
 <template>
   <div>
     <h1>{{ title }}</h1>
+
     <ul v-if="db.length">
-      <li v-for="doc in db" :key="doc.name">
-        <!-- 表示したいフィールド -->
-        {{ doc.fields.name.stringValue }}
-        <!-- 削除ボタン -->
-        <button @click="deleteDoc(doc.name)" style="margin-left:8px">
-          削除
-        </button>
-      </li>
-    </ul>
+  <li v-for="doc in db" :key="doc.name" style="margin-bottom: 1rem;">
+    <h3>{{ doc.fields.title?.stringValue || "タイトルなし" }}</h3>
+    <p>{{ doc.fields.description?.stringValue || "説明なし" }}</p>
+    <img v-if="doc.fields.imageUrl?.stringValue" :src="doc.fields.imageUrl.stringValue" alt="image" style="max-width: 200px;"/>
+    <button @click="deleteDoc(doc.name)" style="margin-left:8px">削除</button>
+  </li>
+</ul>
+
+
     <p v-else>ドキュメントがありません。</p>
   </div>
 </template>
