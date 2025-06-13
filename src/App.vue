@@ -4,11 +4,11 @@ import { RouterLink, RouterView } from 'vue-router';
 
 <template>
   <ul id="nav">
-    <li><RouterLink to="/">Home</RouterLink></li>
-    <li><RouterLink to="/page1">Page1</RouterLink></li>
-    <li><RouterLink to="/page2">Page2</RouterLink></li>
-    <li><RouterLink to="/page3">Page3</RouterLink></li>
-    <li><RouterLink to="/page4">Page4</RouterLink></li>
+    <li><RouterLink to="/">FBI指名手配犯リスト</RouterLink></li>
+    <li><RouterLink to="/page1">発見</RouterLink></li>
+    <!-- <li><RouterLink to="/page2">Page2</RouterLink></li> -->
+    <li><RouterLink to="/page3">誤認</RouterLink></li>
+    <li><RouterLink to="/page4">罪状</RouterLink></li>
   </ul>
   <RouterView />
 </template>

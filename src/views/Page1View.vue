@@ -1,40 +1,54 @@
 <script setup>
-import axios from "axios"; // axiosのインポート
-import { ref, onMounted } from "vue"; // ref と onMounted を使用
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
 
-// ページタイトルと投稿状態のリアクティブなデータ
-const title = ref("Firebaseの利用2(書き込み1：Create)");
-const resText = ref("未完了");
+// const title = ref('お気に入り登録（Create）')
+const fbiList = ref([])
+const projectId = 'vue-test1-15df7' 
+const collectionId = 'sample1'  
 
-// データを書き込む関数
-const postData = async () => {
-const project1 = "vue-test1-15df7"; // FirebaseプロジェクトID
-const collection1 = "sample1"; // Firebaseのコレクション名
-const url = `https://firestore.googleapis.com/v1/projects/${project1}/databases/(default)/documents/${collection1}`;
-
-try {
-const result = await axios.post(url, {
-fields: {
-name: { stringValue: "test-name" },
-message: { stringValue: "test-message" },
-},
-});
-console.log(result.data); // コンソールにレスポンスデータを出力
-resText.value = "投稿完了！"; // 状態を更新
-} catch (error) {
-console.error("投稿エラー:", error);
-resText.value = "投稿失敗";
+// FBI指名手配犯リスト取得
+const getFBIList = async () => {
+  try {
+    const res = await axios.get('https://api.fbi.gov/wanted/v1/list')
+    fbiList.value = res.data.items || []
+  } catch (e) {
+    console.error('FBI取得エラー', e)
+  }
 }
-};
 
-// コンポーネントがマウントされた時にデータを書き込む
-onMounted(postData);
+// Firestoreにお気に入り登録
+const addToFavorites = async (person) => {
+  const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collectionId}`
+  try {
+    await axios.post(url, {
+      fields: {
+        uid: { stringValue: person.uid },
+        title: { stringValue: person.title },
+        description: { stringValue: person.description || '' },
+        imageUrl: { stringValue: person.images?.[0]?.original || '' },
+      }
+    })
+    // alert('お気に入りに追加しました！')
+  } catch (err) {
+    console.error('追加エラー', err)
+    alert('追加に失敗しました')
+  }
+}
+
+onMounted(getFBIList)
 </script>
 
 <template>
-    <div>
-    <!-- ページのタイトルと投稿の状態を表示 -->
-        <h1>{{ title }}</h1>
-        <p>{{ resText }}</p>
-    </div>
+  <div>
+    <h1>{{ title }}</h1>
+    <ul v-if="fbiList.length">
+      <li v-for="person in fbiList" :key="person.uid" style="margin-bottom:1rem;">
+        <p><strong>{{ person.title }}</strong></p>
+        <img :src="person.images?.[0]?.original" alt="No image" width="150" />
+        <p>{{ person.description }}</p>
+        <button @click="addToFavorites(person)">お気に入りに追加</button>
+      </li>
+    </ul>
+  </div>
 </template>

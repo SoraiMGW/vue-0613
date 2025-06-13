@@ -2,36 +2,38 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
-// リアクティブなデータ
-const title = ref("Firebaseの利用1(読み込み：Read)");
-const db = ref([]);
+const title = ref("FBI指名手配犯リスト");
+const fbiList = ref([]);
+const page = ref(1);
 
-// Firestore からデータを取得する関数
-const getData = async () => {
-const project1 = "vue-test1-15df7"; // プロジェクトID
-const collection1 = "sample1"; // コレクション名
-const url =`https://firestore.googleapis.com/v1/projects/${project1}/databases/(default)/documents/${collection1}`;
-
-try {
-const result = await axios.get(url);
-console.log(result.data);
-db.value = result.data.documents; // 取得したデータを db に格納
-} catch (error) {
-console.error("データ取得エラー:", error);
-}
+// データ取得
+const getFBIList = async () => {
+  try {
+    const response = await axios.get("https://api.fbi.gov/wanted/v1/list", {
+      params: {
+        page: page.value
+      }
+    });
+    fbiList.value = response.data.items || [];
+  } catch (err) {
+    console.error("FBI API取得エラー:", err);
+  }
 };
 
-// コンポーネントがマウントされたらデータを取得
-onMounted(getData);
+onMounted(getFBIList);
 </script>
 
 <template>
   <div>
     <h1>{{ title }}</h1>
-    <ul>
-      <li v-for="dbItem in db" :key="dbItem.name">
-      {{ dbItem.fields.name.stringValue }}
+    <ul v-if="fbiList.length">
+      <li v-for="person in fbiList" :key="person.uid">
+        <p><strong>{{ person.title }}</strong></p>
+        <img :src="person.images[0]?.original" alt="No image" width="150" />
+        <p>{{ person.description }}</p>
       </li>
     </ul>
+    <button @click="page--; getFBIList()" :disabled="page === 1">前へ</button>
+    <button @click="page++; getFBIList()">次へ</button>
   </div>
 </template>
