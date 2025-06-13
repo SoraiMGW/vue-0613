@@ -3,7 +3,7 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 
-const title = ref('Firebaseの利用4(削除：Delete)')
+// const title = ref('Firebaseの利用4(削除：Delete)')
 const db = ref([])
 
 // Firestore のプロジェクト／コレクション設定

@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 
-const title = ref('お気に入り登録（Create）')
+// const title = ref('お気に入り登録（Create）')
 const fbiList = ref([])
 const projectId = 'vue-test1-15df7' 
 const collectionId = 'sample1'  
